@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - New Shoes Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016, #4a7c59);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .checkout-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .checkout-header h1 {
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkout-header p {
+            color: #666;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .section-title {
+            color: #2d5016;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2d5016;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #90EE90;
+            box-shadow: 0 0 0 3px rgba(144, 238, 144, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .order-summary {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 15px;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .order-summary h2 {
+            color: #2d5016;
+            margin-bottom: 1.5rem;
+        }
+
+        .cart-item-summary {
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2d5016;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-quantity {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: #4a7c59;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid #2d5016;
+            border-bottom: none;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2d5016;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-option {
+            padding: 1.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+        }
+
+        .payment-option:hover {
+            border-color: #90EE90;
+            transform: translateY(-2px);
+        }
+
+        .payment-option input {
+            display: none;
+        }
+
+        .payment-option.selected {
+            border-color: #4a7c59;
+            background: #f0f8f0;
+        }
+
+        .payment-option i {
+            font-size: 2rem;
+            color: #4a7c59;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-option label {
+            display: block;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2d5016;
+        }
+
+        .payment-option .payment-desc {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .payment-details {
+            display: none;
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .payment-details.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #card-element {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+        }
+
+        #card-errors {
+            color: #dc3545;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4a7c59, #90EE90);
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .place-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 124, 89, 0.4);
+        }
+
+        .place-order-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .back-to-shop {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-to-shop a {
+            color: #4a7c59;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .back-to-shop a:hover {
+            color: #2d5016;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-cart i {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .momo-instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .momo-instructions h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .momo-instructions ol {
+            margin-left: 1.5rem;
+            color: #856404;
+        }
+
+        .momo-instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .secure-badge i {
+            color: #4a7c59;
+        }
+
+        @media (max-width: 968px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+
+            .form-row, .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h1><i class="fas fa-shopping-cart"></i> Secure Checkout</h1>
+            <p>Complete your order in just a few simple steps</p>
+        </div>
+
+        <div id="checkoutContent"></div>
+
+        <div class="back-to-shop">
+            <a href="index.html">
+                <i class="fas fa-arrow-left"></i> Continue Shopping
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        const cart = JSON.parse(localStorage.getItem('shoeStoreCart') || '[]');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        
+        // Initialize Stripe (you'll need to replace with your publishable key)
+        const stripe = Stripe('pk_test_your_stripe_publishable_key_here');
+        let cardElement;
+
+        function displayCheckout() {
+            const container = document.getElementById('checkoutContent');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your cart is empty!</p>
+                        <a href="index.html" class="place-order-btn" style="max-width: 300px; margin: 0 auto;">
+                            <i class="fas fa-shopping-bag"></i> Start Shopping
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            container.innerHTML = `
+                <div class="checkout-grid">
+                    <div class="shipping-form">
+                        <h2 class="section-title"><i class="fas fa-shipping-fast"></i> Shipping Information</h2>
+                        <form id="checkoutForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name *</label>
+                                    <input type="text" id="name" required value="${userData.name || ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address *</label>
+                                    <input type="email" id="email" required value="${userData.email || ''}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Phone Number *</label>
+                                <input type="tel" id="phone" required placeholder="+250 788 123 456" value="${userData.phone || ''}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Street Address *</label>
+                                <input type="text" id="address" required placeholder="KG 123 St" value="${userData.address || ''}">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>City *</label>
+                                    <input type="text" id="city" required placeholder="Kigali" value="Kigali">
+                                </div>
+                                <div class="form-group">
+                                    <label>District</label>
+                                    <input type="text" id="district" placeholder="Gasabo">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Delivery Instructions (Optional)</label>
+                                <textarea id="notes" rows="3" placeholder="Any special delivery instructions..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Payment Method *</label>
+                                <div class="payment-methods">
+                                    <div class="payment-option selected" onclick="selectPayment('cash')">
+                                        <input type="radio" name="payment" id="cash" value="cash" checked>
+                                        <label for="cash">
+                                            <i class="fas fa-money-bill-wave"></i><br>
+                                            Cash on Delivery
+                                            <div class="payment-desc">Pay when you receive</div>
+                                        </label>
+                                    </div>
+                                    <div class="payment-option" onclick="selectPayment('stripe')">
+                                        <input type="radio" name="payment" id="stripe" value="stripe">
+                                        <label for="stripe">
+                                            <i class="fab fa-cc-stripe"></i><br>
+                                            Credit/Debit Card
+                                            <div class="payment-desc">Visa, Mastercard</div>
+                                        </label>
+                                    </div>
+                                    <div class="payment-option" onclick="selectPayment('momo')">
+                                        <input type="radio" name="payment" id="momo" value="momo">
+                                        <label for="momo">
+                                            <i class="fas fa-mobile-alt"></i><br>
+                                            Mobile Money
+                                            <div class="payment-desc">MTN, Airtel</div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Stripe Card Details -->
+                                <div id="stripeDetails" class="payment-details">
+                                    <h4 style="color: #2d5016; margin-bottom: 1rem;">
+                                        <i class="fas fa-credit-card"></i> Card Details
+                                    </h4>
+                                    <div id="card-element"></div>
+                                    <div id="card-errors"></div>
+                                    <div class="secure-badge">
+                                        <i class="fas fa-lock"></i>
+                                        <span>Secured by Stripe - Your card details are encrypted</span>
+                                    </div>
+                                </div>
+
+                                <!-- Mobile Money Details -->
+                                <div id="momoDetails" class="payment-details">
+                                    <h4 style="color: #2d5016; margin-bottom: 1rem;">
+                                        <i class="fas fa-mobile-alt"></i> Mobile Money Payment
+                                    </h4>
+                                    <div class="form-group">
+                                        <label>Select Provider *</label>
+                                        <select id="momoProvider" required>
+                                            <option value="">Choose provider</option>
+                                            <option value="mtn">MTN Mobile Money</option>
+                                            <option value="airtel">Airtel Money</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mobile Number *</label>
+                                        <input type="tel" id="momoNumber" placeholder="+250 788 123 456" pattern="\\+250[0-9]{9}">
+                                    </div>
+                                    <div class="momo-instructions">
+                                        <h4><i class="fas fa-info-circle"></i> Payment Instructions:</h4>
+                                        <ol>
+                                            <li>Click "Place Order" below</li>
+                                            <li>You'll receive a payment prompt on your phone</li>
+                                            <li>Enter your Mobile Money PIN to confirm</li>
+                                            <li>Wait for confirmation SMS</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="order-summary">
+                        <h2>Order Summary</h2>
+                        ${cart.map(item => `
+                            <div class="cart-item-summary">
+                                <div class="item-info">
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-quantity">Qty: ${item.quantity}</div>
+                                </div>
+                                <div class="item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                            </div>
+                        `).join('')}
+                        
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span>$${total.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>$${total.toFixed(2)}</span>
+                        </div>
+
+                        <button class="place-order-btn" onclick="placeOrder()">
+                            <i class="fas fa-check-circle"></i> Place Order - $${total.toFixed(2)}
+                        </button>
+
+                        <div class="secure-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>100% Secure Checkout</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize Stripe card element
+            initializeStripe();
+        }
+
+        function initializeStripe() {
+            const elements = stripe.elements();
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#2d5016',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#dc3545',
+                    },
+                },
+            });
+            cardElement.mount('#card-element');
+
+            cardElement.on('change', (event) => {
+                const displayError = document.getElementById('card-errors');
+                if (event.error) {
+                    displayError.textContent = event.error.message;
+                } else {
+                    displayError.textContent = '';
+                }
+            });
+        }
+
+        function selectPayment(method) {
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            document.getElementById(method).checked = true;
+
+            // Hide all payment details
+            document.querySelectorAll('.payment-details').forEach(detail => {
+                detail.classList.remove('active');
+            });
+
+            // Show relevant payment details
+            if (method === 'stripe') {
+                document.getElementById('stripeDetails').classList.add('active');
+            } else if (method === 'momo') {
+                document.getElementById('momoDetails').classList.add('active');
+            }
+        }
+
+        async function placeOrder() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            const form = document.getElementById('checkoutForm');
+
+            // Validate form
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // Validate payment-specific fields
+            if (paymentMethod === 'momo') {
+                const provider = document.getElementById('momoProvider').value;
+                const number = document.getElementById('momoNumber').value;
+                if (!provider || !number) {
+                    alert('Please fill in all Mobile Money details');
+                    return;
+                }
+            }
+
+            const btn = document.querySelector('.place-order-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                let paymentResult = null;
+
+                // Handle different payment methods
+                if (paymentMethod === 'stripe') {
+                    paymentResult = await processStripePayment(total);
+                    if (!paymentResult.success) {
+                        throw new Error(paymentResult.error);
+                    }
+                } else if (paymentMethod === 'momo') {
+                    paymentResult = await processMomoPayment(total);
+                    if (!paymentResult.success) {
+                        throw new Error(paymentResult.error);
+                    }
+                }
+
+                // Create order
+                const orderData = {
+                    customerName: document.getElementById('name').value,
+                    customerEmail: document.getElementById('email').value,
+                    customerPhone: document.getElementById('phone').value,
+                    shippingAddress: `${document.getElementById('address').value}, ${document.getElementById('city').value}, ${document.getElementById('district').value || 'Rwanda'}`,
+                    products: cart.map(item => ({
+                        productId: item.id,
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity
+                    })),
+                    totalAmount: parseFloat(total.toFixed(2)),
+                    paymentMethod: paymentMethod,
+                    paymentId: paymentResult ? paymentResult.paymentId : null,
+                    orderNotes: document.getElementById('notes').value
+                };
+
+                const response = await fetch(`${API_BASE_URL}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Clear cart
+                    localStorage.removeItem('shoeStoreCart');
+
+                    // Redirect to success page
+                    localStorage.setItem('lastOrder', JSON.stringify({
+                        orderId: result.data._id,
+                        total: orderData.totalAmount,
+                        paymentMethod: paymentMethod
+                    }));
+                    window.location.href = 'payment-success.html';
+                } else {
+                    throw new Error(result.message || 'Failed to place order');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Payment failed: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+            }
+        }
+
+        async function processStripePayment(amount) {
+            try {
+                // Create payment intent
+                const response = await fetch(`${API_BASE_URL}/payment/create-intent`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: Math.round(amount * 100) // Convert to cents
+                    })
+                });
+
+                const { clientSecret } = await response.json();
+
+                // Confirm payment
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: document.getElementById('name').value,
+                            email: document.getElementById('email').value,
+                        }
+                    }
+                });
+
+                if (error) {
+                    return { success: false, error: error.message };
+                }
+
+                return { 
+                    success: true, 
+                    paymentId: paymentIntent.id 
+                };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function processMomoPayment(amount) {
+            try {
+                const provider = document.getElementById('momoProvider').value;
+                const number = document.getElementById('momoNumber').value;
+
+                const response = await fetch(`${API_BASE_URL}/payment/momo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        provider: provider,
+                        phoneNumber: number,
+                        amount: amount
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('📱 Payment request sent to your phone!\n\nPlease check your phone and enter your PIN to complete the payment.');
+                    return { 
+                        success: true, 
+                        paymentId: result.transactionId 
+                    };
+                } else {
+                    return { success: false, error: result.message };
+                }
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Initialize
+        displayCheckout();
+    </script>
+</body>
+</html>

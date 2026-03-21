@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - New Shoes Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016, #4a7c59);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            color: #2d5016;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #cc0000;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2d5016;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            background: #90EE90;
+        }
+
+        .tab-btn.active {
+            background: #4a7c59;
+            color: white;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.green { background: linear-gradient(135deg, #4a7c59, #90EE90); }
+        .stat-icon.blue { background: linear-gradient(135deg, #007bff, #00a8ff); }
+        .stat-icon.orange { background: linear-gradient(135deg, #ff8800, #ffaa00); }
+        .stat-icon.red { background: linear-gradient(135deg, #ff4444, #ff6666); }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d5016;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .chart-container h3 {
+            color: #2d5016;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Users Table */
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        thead {
+            background: #4a7c59;
+            color: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        .role-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .role-admin {
+            background: #ff4444;
+            color: white;
+        }
+
+        .role-customer {
+            background: #90EE90;
+            color: #2d5016;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #ffa500;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ff4444;
+            color: white;
+        }
+
+        @media (max-width: 968px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1><i class="fas fa-cog"></i> Admin Dashboard</h1>
+                <p style="color: #666; margin-top: 0.5rem;">Complete store management</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showPanel('analytics')">
+                <i class="fas fa-chart-line"></i> Analytics
+            </button>
+            <button class="tab-btn" onclick="showPanel('users')">
+                <i class="fas fa-users"></i> User Management
+            </button>
+            <button class="tab-btn" onclick="showPanel('products')">
+                <i class="fas fa-box"></i> Products
+            </button>
+            <button class="tab-btn" onclick="showPanel('orders')">
+                <i class="fas fa-shopping-cart"></i> Orders
+            </button>
+        </div>
+
+        <!-- Analytics Panel -->
+        <div id="analyticsPanel" class="panel active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Total Revenue</div>
+                            <div class="stat-number" id="totalRevenue">$0</div>
+                        </div>
+                        <div class="stat-icon green">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Total Orders</div>
+                            <div class="stat-number" id="totalOrders">0</div>
+                        </div>
+                        <div class="stat-icon blue">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Total Products</div>
+                            <div class="stat-number" id="totalProducts">0</div>
+                        </div>
+                        <div class="stat-icon orange">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Total Users</div>
+                            <div class="stat-number" id="totalUsers">0</div>
+                        </div>
+                        <div class="stat-icon red">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-bar"></i> Sales Overview</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3><i class="fas fa-chart-pie"></i> Orders by Status</h3>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Panel -->
+        <div id="usersPanel" class="panel">
+            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h2 style="color: #2d5016; margin-bottom: 1.5rem;">
+                    <i class="fas fa-users"></i> All Users
+                </h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem;">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Products Panel -->
+        <div id="productsPanel" class="panel">
+            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h2 style="color: #2d5016;">
+                    <i class="fas fa-box"></i> Products Management
+                </h2>
+                <p style="color: #666; margin-top: 0.5rem; margin-bottom: 1.5rem;">
+                    Go to your main admin panel to manage products
+                </p>
+                <a href="admin.html" style="display: inline-block; background: #4a7c59; color: white; padding: 1rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-external-link-alt"></i> Open Products Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Orders Panel -->
+        <div id="ordersPanel" class="panel">
+            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h2 style="color: #2d5016; margin-bottom: 1.5rem;">
+                    <i class="fas fa-shopping-cart"></i> Recent Orders
+                </h2>
+                <div id="ordersContainer">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        // Check admin auth
+        const token = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+        if (!token || userData.role !== 'admin') {
+            alert('Access denied. Admin only!');
+            window.location.href = 'login.html';
+        }
+
+        // Load initial data
+        loadAnalytics();
+        loadUsers();
+
+        // Tab switching
+        function showPanel(panelName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+            
+            event.target.closest('.tab-btn').classList.add('active');
+            document.getElementById(panelName + 'Panel').classList.add('active');
+
+            if (panelName === 'orders') loadOrders();
+        }
+
+        // Load Analytics
+        async function loadAnalytics() {
+            try {
+                const [productsRes, ordersRes] = await Promise.all([
+                    fetch(`${API_BASE_URL}/products`),
+                    fetch(`${API_BASE_URL}/orders`)
+                ]);
+
+                const products = await productsRes.json();
+                const orders = await ordersRes.json();
+
+                // Update stats
+                document.getElementById('totalProducts').textContent = products.data.length;
+                document.getElementById('totalOrders').textContent = orders.data.length;
+                
+                const revenue = orders.data.reduce((sum, order) => sum + order.totalAmount, 0);
+                document.getElementById('totalRevenue').textContent = '$' + revenue.toFixed(2);
+
+                // Create charts
+                createSalesChart(orders.data);
+                createStatusChart(orders.data);
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        function createSalesChart(orders) {
+            const last7Days = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                last7Days.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+            }
+
+            const salesData = last7Days.map(() => Math.floor(Math.random() * 1000) + 500);
+
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last7Days,
+                    datasets: [{
+                        label: 'Daily Sales ($)',
+                        data: salesData,
+                        borderColor: '#4a7c59',
+                        backgroundColor: 'rgba(74, 124, 89, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function createStatusChart(orders) {
+            const statusCounts = {
+                pending: 0,
+                processing: 0,
+                shipped: 0,
+                delivered: 0
+            };
+
+            orders.forEach(order => {
+                if (statusCounts.hasOwnProperty(order.status)) {
+                    statusCounts[order.status]++;
+                }
+            });
+
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Processing', 'Shipped', 'Delivered'],
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#ffc107', '#17a2b8', '#6f42c1', '#28a745']
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        // Load Users
+        async function loadUsers() {
+            // Simulated user data (in production, fetch from API)
+            const users = [
+                { name: userData.name, email: userData.email, role: 'admin', phone: userData.phone || 'N/A', joined: 'Jan 2026' }
+            ];
+
+            document.getElementById('totalUsers').textContent = users.length;
+
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td><strong>${user.name}</strong></td>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge role-${user.role}">${user.role}</span></td>
+                    <td>${user.phone}</td>
+                    <td>${user.joined}</td>
+                    <td>
+                        <button class="btn-small btn-edit" onclick="editUser('${user.email}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function editUser(email) {
+            alert('Edit user: ' + email + '\n\nThis would open a modal to edit user details.');
+        }
+
+        // Load Orders
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/orders`);
+                const result = await response.json();
+
+                const container = document.getElementById('ordersContainer');
+                if (result.success && result.data.length > 0) {
+                    container.innerHTML = result.data.slice(0, 10).map(order => `
+                        <div style="padding: 1rem; border-bottom: 1px solid #e0e0e0;">
+                            <strong>Order #${order._id.slice(-8)}</strong> - 
+                            ${order.customerName} - 
+                            $${order.totalAmount.toFixed(2)} - 
+                            <span class="role-badge role-${order.status}">${order.status}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>No orders yet</p>';
+                }
+            } catch (error) {
+                document.getElementById('ordersContainer').innerHTML = '<p>Error loading orders</p>';
+            }
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

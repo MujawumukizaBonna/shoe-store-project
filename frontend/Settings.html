@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - New Shoes Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2d5016, #4a7c59);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h1 {
+            color: #2d5016;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn {
+            background: white;
+            color: #2d5016;
+            border: 2px solid #2d5016;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #2d5016;
+            color: white;
+        }
+
+        .settings-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .settings-section h2 {
+            color: #2d5016;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2d5016;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #90EE90;
+            box-shadow: 0 0 0 3px rgba(144, 238, 144, 0.2);
+        }
+
+        .form-group input:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a7c59, #90EE90);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 124, 89, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4a7c59;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+
+        .preference-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preference-label strong {
+            color: #2d5016;
+            margin-bottom: 0.25rem;
+        }
+
+        .preference-label span {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .danger-zone {
+            border: 2px solid #dc3545;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .danger-zone h3 {
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .preference-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-cog"></i> Settings</h1>
+                <p style="color: #666; margin-top: 0.5rem;">Manage your account preferences</p>
+            </div>
+            <a href="customer-dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="settings-section">
+            <h2><i class="fas fa-user"></i> Profile Information</h2>
+            
+            <div class="success-message" id="profileSuccess">
+                <i class="fas fa-check-circle"></i> Profile updated successfully!
+            </div>
+            <div class="error-message" id="profileError"></div>
+
+            <form id="profileForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="userName" placeholder="Your full name">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="userEmail" disabled>
+                    <small style="color: #666;">Email cannot be changed</small>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" id="userPhone" placeholder="+250 788 123 456">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                    <input type="text" id="userAddress" placeholder="Your address">
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </form>
+        </div>
+
+        <!-- Change Password -->
+        <div class="settings-section">
+            <h2><i class="fas fa-lock"></i> Change Password</h2>
+            
+            <div class="success-message" id="passwordSuccess">
+                <i class="fas fa-check-circle"></i> Password changed successfully!
+            </div>
+            <div class="error-message" id="passwordError"></div>
+
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> Current Password</label>
+                    <input type="password" id="currentPassword" placeholder="Enter current password" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password" required minlength="6">
+                    <small style="color: #666;">Must be at least 6 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> Confirm New Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-lock"></i> Change Password
+                </button>
+            </form>
+        </div>
+
+        <!-- Notification Preferences -->
+        <div class="settings-section">
+            <h2><i class="fas fa-bell"></i> Notification Preferences</h2>
+
+            <div class="preference-item">
+                <div class="preference-label">
+                    <strong>Order Updates</strong>
+                    <span>Receive notifications about your order status</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="orderNotifications" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="preference-item">
+                <div class="preference-label">
+                    <strong>Promotional Emails</strong>
+                    <span>Get updates about new products and special offers</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="promoNotifications" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="preference-item">
+                <div class="preference-label">
+                    <strong>SMS Notifications</strong>
+                    <span>Receive order updates via SMS</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="smsNotifications">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveNotificationPreferences()" style="margin-top: 1rem;">
+                <i class="fas fa-save"></i> Save Preferences
+            </button>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-section">
+            <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+            
+            <div class="danger-zone">
+                <h3><i class="fas fa-trash"></i> Delete Account</h3>
+                <p style="color: #666; margin-bottom: 1rem;">
+                    Once you delete your account, there is no going back. Please be certain.
+                </p>
+                <button class="btn btn-danger" onclick="deleteAccount()">
+                    <i class="fas fa-trash"></i> Delete My Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        // Check authentication
+        const token = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+        if (!token) {
+            alert('Please login to access settings');
+            window.location.href = 'login.html';
+        }
+
+        // Load user data
+        loadUserData();
+
+        function loadUserData() {
+            document.getElementById('userName').value = userData.name || '';
+            document.getElementById('userEmail').value = userData.email || '';
+            document.getElementById('userPhone').value = userData.phone || '';
+            document.getElementById('userAddress').value = userData.address || '';
+
+            // Load notification preferences from localStorage
+            const prefs = JSON.parse(localStorage.getItem('notificationPrefs') || '{"order":true,"promo":true,"sms":false}');
+            document.getElementById('orderNotifications').checked = prefs.order;
+            document.getElementById('promoNotifications').checked = prefs.promo;
+            document.getElementById('smsNotifications').checked = prefs.sms;
+        }
+
+        // Update Profile
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const updatedData = {
+                name: document.getElementById('userName').value,
+                phone: document.getElementById('userPhone').value,
+                address: document.getElementById('userAddress').value
+            };
+
+            // Update localStorage
+            userData.name = updatedData.name;
+            userData.phone = updatedData.phone;
+            userData.address = updatedData.address;
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            showMessage('profileSuccess');
+
+            // In production, you would also update on server:
+            // try {
+            //     const response = await fetch(`${API_BASE_URL}/users/profile`, {
+            //         method: 'PUT',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'Authorization': `Bearer ${token}`
+            //         },
+            //         body: JSON.stringify(updatedData)
+            //     });
+            //     const result = await response.json();
+            //     if (result.success) {
+            //         showMessage('profileSuccess');
+            //     }
+            // } catch (error) {
+            //     showMessage('profileError', 'Failed to update profile');
+            // }
+        });
+
+        // Change Password
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showMessage('passwordError', 'New passwords do not match!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showMessage('passwordError', 'Password must be at least 6 characters!');
+                return;
+            }
+
+            // In production, send to server
+            showMessage('passwordSuccess');
+            document.getElementById('passwordForm').reset();
+
+            // Actual API call would be:
+            // try {
+            //     const response = await fetch(`${API_BASE_URL}/users/change-password`, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'Authorization': `Bearer ${token}`
+            //         },
+            //         body: JSON.stringify({ currentPassword, newPassword })
+            //     });
+            //     const result = await response.json();
+            //     if (result.success) {
+            //         showMessage('passwordSuccess');
+            //     } else {
+            //         showMessage('passwordError', result.message);
+            //     }
+            // } catch (error) {
+            //     showMessage('passwordError', 'Failed to change password');
+            // }
+        });
+
+        function saveNotificationPreferences() {
+            const prefs = {
+                order: document.getElementById('orderNotifications').checked,
+                promo: document.getElementById('promoNotifications').checked,
+                sms: document.getElementById('smsNotifications').checked
+            };
+
+            localStorage.setItem('notificationPrefs', JSON.stringify(prefs));
+            
+            // Show success notification
+            const notification = document.createElement('div');
+            notification.className = 'success-message';
+            notification.style.display = 'block';
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '10000';
+            notification.innerHTML = '<i class="fas fa-check-circle"></i> Notification preferences saved!';
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function deleteAccount() {
+            const confirmed = confirm('⚠️ Are you absolutely sure you want to delete your account?\n\nThis action CANNOT be undone!\n\nType "DELETE" to confirm.');
+            
+            if (confirmed) {
+                const doubleCheck = prompt('Type DELETE to confirm account deletion:');
+                
+                if (doubleCheck === 'DELETE') {
+                    // In production, call API to delete account
+                    alert('Account deletion would be processed here.\n\nIn production, this would:\n1. Delete all your data\n2. Cancel pending orders\n3. Remove your account permanently');
+                    
+                    // Actual implementation:
+                    // fetch(`${API_BASE_URL}/users/account`, {
+                    //     method: 'DELETE',
+                    //     headers: { 'Authorization': `Bearer ${token}` }
+                    // }).then(() => {
+                    //     localStorage.clear();
+                    //     window.location.href = 'index.html';
+                    // });
+                } else {
+                    alert('Account deletion cancelled.');
+                }
+            }
+        }
+
+        function showMessage(elementId, customMessage = null) {
+            const element = document.getElementById(elementId);
+            if (customMessage) {
+                element.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${customMessage}`;
+            }
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

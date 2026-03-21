@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - New Shoes Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff8800, #ffaa00);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            color: #ff8800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff8800, #ffaa00);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.orange { background: linear-gradient(135deg, #ff8800, #ffaa00); }
+        .stat-icon.green { background: linear-gradient(135deg, #4a7c59, #90EE90); }
+        .stat-icon.blue { background: linear-gradient(135deg, #007bff, #00a8ff); }
+        .stat-icon.red { background: linear-gradient(135deg, #ff4444, #ff6666); }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d5016;
+        }
+
+        .stat-label {
+            color: #666;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #ff8800;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: #fff3cd;
+        }
+
+        .tab-btn.active {
+            background: #ff8800;
+            color: white;
+        }
+
+        .panel {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            border-color: #ffaa00;
+            box-shadow: 0 5px 15px rgba(255, 170, 0, 0.3);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ff8800, #ffaa00);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-image i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2d5016;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1><i class="fas fa-store"></i> Seller Dashboard</h1>
+                <p style="color: #666; margin-top: 0.5rem;">Welcome, <span id="sellerName">Seller</span>!</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="window.location.href='index.html'">
+                    <i class="fas fa-home"></i> Storefront
+                </button>
+                <button class="btn btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">My Products</div>
+                        <div class="stat-number" id="totalProducts">0</div>
+                    </div>
+                    <div class="stat-icon orange">
+                        <i class="fas fa-box"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Total Sales</div>
+                        <div class="stat-number" id="totalSales">$0</div>
+                    </div>
+                    <div class="stat-icon green">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Pending Orders</div>
+                        <div class="stat-number" id="pendingOrders">0</div>
+                    </div>
+                    <div class="stat-icon blue">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-label">Total Orders</div>
+                        <div class="stat-number" id="totalOrders">0</div>
+                    </div>
+                    <div class="stat-icon red">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showPanel('products')">
+                <i class="fas fa-box"></i> My Products
+            </button>
+            <button class="tab-btn" onclick="showPanel('orders')">
+                <i class="fas fa-shopping-cart"></i> My Orders
+            </button>
+            <button class="tab-btn" onclick="showPanel('addProduct')">
+                <i class="fas fa-plus"></i> Add Product
+            </button>
+            <button class="tab-btn" onclick="showPanel('profile')">
+                <i class="fas fa-user"></i> Profile
+            </button>
+        </div>
+
+        <!-- Products Panel -->
+        <div id="productsPanel" class="panel active">
+            <h2 style="color: #ff8800; margin-bottom: 1.5rem;">
+                <i class="fas fa-box"></i> My Products
+            </h2>
+            <div id="productsContainer" class="products-grid">
+                <p style="text-align: center; color: #666; grid-column: 1/-1;">Loading products...</p>
+            </div>
+        </div>
+
+        <!-- Orders Panel -->
+        <div id="ordersPanel" class="panel">
+            <h2 style="color: #ff8800; margin-bottom: 1.5rem;">
+                <i class="fas fa-shopping-cart"></i> My Orders
+            </h2>
+            <div id="ordersContainer">
+                <p style="text-align: center; color: #666;">Loading orders...</p>
+            </div>
+        </div>
+
+        <!-- Add Product Panel -->
+        <div id="addProductPanel" class="panel">
+            <h2 style="color: #ff8800; margin-bottom: 1.5rem;">
+                <i class="fas fa-plus"></i> Add New Product
+            </h2>
+            <p style="color: #666; margin-bottom: 2rem;">
+                Add products to your store. They will be visible to all customers.
+            </p>
+            <a href="admin.html" class="btn btn-primary">
+                <i class="fas fa-external-link-alt"></i> Go to Product Management
+            </a>
+        </div>
+
+        <!-- Profile Panel -->
+        <div id="profilePanel" class="panel">
+            <h2 style="color: #ff8800; margin-bottom: 1.5rem;">
+                <i class="fas fa-user"></i> Seller Profile
+            </h2>
+            <div style="background: #f8f9fa; padding: 2rem; border-radius: 10px;">
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: #2d5016;">Name:</strong>
+                    <span id="profileName">Loading...</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: #2d5016;">Email:</strong>
+                    <span id="profileEmail">Loading...</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: #2d5016;">Phone:</strong>
+                    <span id="profilePhone">Loading...</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: #2d5016;">Business Name:</strong>
+                    <span id="profileBusiness">Loading...</span>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: #2d5016;">Role:</strong>
+                    <span style="background: #ff8800; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">SELLER</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5500/api';
+        
+        // Check seller auth
+        const token = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+        if (!token || userData.role !== 'seller') {
+            alert('Access denied. Sellers only!');
+            window.location.href = 'login.html';
+        }
+
+        // Load data
+        loadSellerData();
+
+        function showPanel(panelName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+            
+            event.target.closest('.tab-btn').classList.add('active');
+            document.getElementById(panelName + 'Panel').classList.add('active');
+
+            if (panelName === 'orders') loadOrders();
+        }
+
+        async function loadSellerData() {
+            // Display seller info
+            document.getElementById('sellerName').textContent = userData.name || 'Seller';
+            document.getElementById('profileName').textContent = userData.name || 'N/A';
+            document.getElementById('profileEmail').textContent = userData.email || 'N/A';
+            document.getElementById('profilePhone').textContent = userData.phone || 'N/A';
+            document.getElementById('profileBusiness').textContent = userData.businessInfo?.businessName || 'N/A';
+
+            // Load products
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                const result = await response.json();
+
+                if (result.success) {
+                    // Filter only seller's products (in production, add sellerId to products)
+                    const sellerProducts = result.data; // For now, show all
+                    
+                    document.getElementById('totalProducts').textContent = sellerProducts.length;
+
+                    const container = document.getElementById('productsContainer');
+                    if (sellerProducts.length > 0) {
+                        container.innerHTML = sellerProducts.map(product => `
+                            <div class="product-card">
+                                <div class="product-image">
+                                    ${product.image 
+                                        ? `<img src="${API_BASE_URL.replace('/api', '')}${product.image}" alt="${product.name}">`
+                                        : `<i class="fas fa-shoe-prints"></i>`
+                                    }
+                                </div>
+                                <h3 style="color: #2d5016; margin-bottom: 0.5rem;">${product.name}</h3>
+                                <div style="font-size: 1.3rem; font-weight: bold; color: #ff8800; margin-bottom: 0.5rem;">
+                                    $${product.price.toFixed(2)}
+                                </div>
+                                <div style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                    Stock: ${product.stock}
+                                </div>
+                                <button class="btn btn-danger" onclick="deleteProduct('${product._id}')" style="width: 100%; padding: 0.5rem;">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        `).join('');
+                    } else {
+                        container.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No products yet. Add your first product!</p>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (confirm('Delete this product?')) {
+                try {
+                    await fetch(`${API_BASE_URL}/products/${id}`, { method: 'DELETE' });
+                    loadSellerData();
+                } catch (error) {
+                    alert('Error deleting product');
+                }
+            }
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/orders`);
+                const result = await response.json();
+
+                const container = document.getElementById('ordersContainer');
+                if (result.success && result.data.length > 0) {
+                    // In production, filter by seller's products
+                    const orders = result.data;
+                    
+                    document.getElementById('totalOrders').textContent = orders.length;
+                    document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
+                    
+                    const revenue = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+                    document.getElementById('totalSales').textContent = '$' + revenue.toFixed(2);
+
+                    container.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${orders.map(order => `
+                                    <tr>
+                                        <td>#${order._id.slice(-8)}</td>
+                                        <td>${order.customerName}</td>
+                                        <td>$${order.totalAmount.toFixed(2)}</td>
+                                        <td><span style="background: #fff3cd; padding: 0.25rem 0.75rem; border-radius: 20px;">${order.status}</span></td>
+                                        <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">No orders yet</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>
