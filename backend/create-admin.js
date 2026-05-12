@@ -1,36 +1,17 @@
-// CREATE ADMIN ACCOUNT SCRIPT
-// Save this as: create-admin.js in your backend folder
-// Run with: node create-admin.js
-
-const mongoose = require('mongoose');
+const { createClient } = require('@supabase/supabase-js');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/shoestore';
+// Supabase connection
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-// User Schema (same as in server.js)
-const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, default: 'customer' },
-    phone: String,
-    address: String,
-    createdAt: { type: Date, default: Date.now }
-});
-
-const User = mongoose.model('User', userSchema);
-
-// Create Admin Function
 async function createAdmin() {
     try {
-        // Connect to MongoDB
-        console.log('🔄 Connecting to MongoDB...');
-        await mongoose.connect(MONGODB_URI);
-        console.log('✅ Connected to MongoDB\n');
+        console.log('🔄 Connecting to Supabase...\n');
 
-        // Admin details
         const adminData = {
             name: 'Admin User',
             email: 'admin@shoestore.com',
@@ -41,61 +22,79 @@ async function createAdmin() {
         };
 
         // Check if admin already exists
-        const existingAdmin = await User.findOne({ email: adminData.email });
-        
+        const { data: existingAdmin, error: findError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', adminData.email)
+            .single();
+
+        if (findError && findError.code !== 'PGRST116') {
+            throw findError;
+        }
+
         if (existingAdmin) {
-            console.log('⚠️  Admin account already exists!');
+            console.log('⚠️ Admin already exists!');
             console.log('📧 Email:', existingAdmin.email);
             console.log('👤 Name:', existingAdmin.name);
-            console.log('🔑 Role:', existingAdmin.role);
-            
-            // Update to admin if not already
+
+            // Update role if needed
             if (existingAdmin.role !== 'admin') {
-                existingAdmin.role = 'admin';
-                await existingAdmin.save();
+                const { error: updateError } = await supabase
+                    .from('users')
+                    .update({ role: 'admin' })
+                    .eq('id', existingAdmin.id);
+
+                if (updateError) throw updateError;
+
                 console.log('✅ Updated role to admin!');
             }
         } else {
-            // Hash password
             console.log('🔐 Hashing password...');
             const hashedPassword = await bcrypt.hash(adminData.password, 10);
 
-            // Create admin user
             console.log('👤 Creating admin account...');
-            const admin = new User({
-                ...adminData,
-                password: hashedPassword
-            });
 
-            await admin.save();
+            const { error: insertError } = await supabase
+                .from('users')
+                .insert([
+                    {
+                        name: adminData.name,
+                        email: adminData.email,
+                        password: hashedPassword,
+                        role: adminData.role,
+                        phone: adminData.phone,
+                        address: adminData.address
+                    }
+                ]);
+
+            if (insertError) throw insertError;
+
             console.log('✅ Admin account created successfully!\n');
         }
 
-        // Display credentials
         console.log('═══════════════════════════════════════');
         console.log('📋 ADMIN LOGIN CREDENTIALS');
         console.log('═══════════════════════════════════════');
-        console.log('📧 Email:    admin@shoestore.com');
+        console.log('📧 Email: admin@shoestore.com');
         console.log('🔑 Password: Admin123!');
-        console.log('🌐 Login at: http://localhost:3000/login.html');
         console.log('═══════════════════════════════════════\n');
-        console.log('⚠️  IMPORTANT: Change password after first login!\n');
 
-        // Verify all users
-        const allUsers = await User.find();
-        console.log('👥 All users in database:');
-        allUsers.forEach((user, index) => {
+        // Show all users
+        const { data: users, error: usersError } = await supabase
+            .from('users')
+            .select('*');
+
+        if (usersError) throw usersError;
+
+        console.log('👥 All users:');
+
+        users.forEach((user, index) => {
             console.log(`${index + 1}. ${user.email} - Role: ${user.role}`);
         });
 
     } catch (error) {
         console.error('❌ Error:', error.message);
-    } finally {
-        await mongoose.connection.close();
-        console.log('\n🔌 Database connection closed');
-        process.exit(0);
     }
 }
 
-// Run the script
 createAdmin();
