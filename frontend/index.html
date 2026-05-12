@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Premium handcrafted shoes from Rwanda. Quality footwear for every occasion.">
+    <title>New Shoes Store - Premium Footwear from Rwanda</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Shopping Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2><i class="fas fa-shopping-cart"></i> Shopping Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="cartItems" class="cart-items">
+            <!-- Cart items will be inserted here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <a href="cart.html" class="checkout-btn">
+                <i class="fas fa-shopping-cart"></i> View Full Cart
+            </a>
+            <button class="checkout-btn" onclick="goToCheckout()">
+                <i class="fas fa-credit-card"></i> Checkout
+            </button>
+            <button class="clear-cart-btn" onclick="clearCart()">
+                <i class="fas fa-trash"></i> Clear Cart
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shoe-prints"></i> NEW SHOES
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Categories</a></li>
+                <li><a href="#featured">Featured</a></li>
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="cart-btn" onclick="goToCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="cart-count">0</span>
+                </button>
+                <!-- User Menu - Will change based on login status -->
+                <div id="userMenu">
+                    <button class="auth-btn" onclick="goToLogin()">
+                        <i class="fas fa-user"></i> Login
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-menu" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content fade-in">
+                <div class="hero-badge">
+                    <i class="fas fa-award"></i> 5 Years of Excellence
+                </div>
+                <h1 class="hero-title">Premium Handcrafted Shoes</h1>
+                <p class="hero-subtitle">Made in Rwanda with Love & Passion</p>
+                <p class="hero-description">
+                    Experience the perfect blend of traditional craftsmanship and modern design. 
+                    Each pair tells a story of dedication, quality, and Rwandan heritage.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#shop" class="cta-button primary">
+                        <i class="fas fa-shopping-bag"></i> Shop Now
+                    </a>
+                    <a href="#about" class="cta-button secondary">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span class="stat-number">5000+</span>
+                        <span class="stat-label">Happy Customers</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span class="stat-number">4.9</span>
+                        <span class="stat-label">Average Rating</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-shoe-prints"></i>
+                        <span class="stat-number">100+</span>
+                        <span class="stat-label">Shoe Designs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Our Categories</h2>
+                <p class="section-subtitle">Explore our curated collection of premium footwear</p>
+            </div>
+            <div class="products-grid">
+                <div class="product-card fade-in">
+                    <div class="product-icon">
+                        <i class="fas fa-walking"></i>
+                    </div>
+                    <h3>Casual Shoes</h3>
+                    <p>Comfortable everyday footwear designed for daily activities. Perfect blend of style and comfort for your casual lifestyle.</p>
+                    <a href="#shop" class="product-link">Browse Collection <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Formal Wear</h3>
+                    <p>Professional and sophisticated shoes suitable for office wear and formal occasions. Crafted with attention to detail.</p>
+                    <a href="#shop" class="product-link">Browse Collection <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <h3>Sports Shoes</h3>
+                    <p>High-performance athletic footwear designed for sports and fitness activities. Engineered for comfort and durability.</p>
+                    <a href="#shop" class="product-link">Browse Collection <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section id="featured" class="featured">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Our most popular and trending items</p>
+            </div>
+            <div class="filter-buttons fade-in">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="casual">Casual</button>
+                <button class="filter-btn" data-filter="formal">Formal</button>
+                <button class="filter-btn" data-filter="sports">Sports</button>
+            </div>
+            <div id="featuredProducts" class="featured-grid">
+                <!-- Products will be loaded dynamically -->
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading products...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop" class="shop">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Shop All Products</h2>
+                <p class="section-subtitle">Browse our complete collection</p>
+            </div>
+            <div id="shopProducts" class="shop-grid">
+                <!-- All products will be loaded here -->
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading products...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">About Us</h2>
+                <p class="section-subtitle">Our Story & Mission</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <h3>Crafted with Pride in Rwanda</h3>
+                    <p>
+                        Since 2019, we've been creating premium handcrafted shoes that combine traditional 
+                        Rwandan craftsmanship with modern design principles. Each pair is made with attention 
+                        to detail and a commitment to quality that reflects our heritage.
+                    </p>
+                    <p>
+                        Our mission is to provide comfortable, stylish, and durable footwear while supporting 
+                        local artisans and sustainable practices. We believe in fair wages, ethical production, 
+                        and creating shoes that last.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>100% Handcrafted</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Premium Materials</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Ethical Production</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>1 Year Warranty</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image fade-in">
+                    <img src="images/about.jpg" alt="About New Shoes" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22500%22 height=%22400%22%3E%3Crect fill=%22%234a7c59%22 width=%22500%22 height=%22400%22/%3E%3Ctext fill=%22%23fff%22 font-family=%22Arial%22 font-size=%2224%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22%3EAbout Us%3C/text%3E%3C/svg%3E'">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">What Our Customers Say</h2>
+                <p class="section-subtitle">Real reviews from real customers</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Best shoes I've ever bought! The quality is outstanding and they're so comfortable. Highly recommend!"</p>
+                    <div class="testimonial-author">
+                        <strong>Jean Claude Mugisha</strong>
+                        <span>Kigali, Rwanda</span>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Amazing craftsmanship! I love supporting local businesses and these shoes exceeded my expectations."</p>
+                    <div class="testimonial-author">
+                        <strong>Marie Uwase</strong>
+                        <span>Musanze, Rwanda</span>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Perfect fit and style! The customer service was excellent. Will definitely buy again."</p>
+                    <div class="testimonial-author">
+                        <strong>David Nkusi</strong>
+                        <span>Huye, Rwanda</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">We'd love to hear from you</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info fade-in">
+                    <div class="info-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Visit Us</h3>
+                        <p>KG 123 St, Kigali<br>Rwanda</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-phone"></i>
+                        <h3>Call Us</h3>
+                        <p>+250 790 492 202<br>+250 788 654 321</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email Us</h3>
+                        <p>info@newshoes.rw<br>support@newshoes.rw</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Working Hours</h3>
+                        <p>Mon - Fri: 8AM - 6PM<br>Sat: 9AM - 4PM</p>
+                    </div>
+                </div>
+                <form class="contact-form fade-in" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject"><i class="fas fa-tag"></i> Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message"><i class="fas fa-comment"></i> Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-shoe-prints"></i> NEW SHOES</h3>
+                    <p>Premium handcrafted footwear from Rwanda. Quality you can trust, style you can love.</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Categories</a></li>
+                        <li><a href="#shop">Shop</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="admin.html">Admin</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer</h4>
+                    <ul>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="cart.html">Shopping Cart</a></li>
+                        <li><a href="orders.html">My Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to get updates on new products and offers</p>
+                    <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+                        <input type="email" placeholder="Your email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 New Shoes Store. Made with <i class="fas fa-heart"></i> in Rwanda. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Navigation Functions
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function goToRegister() {
+            window.location.href = 'register.html';
+        }
+
+        function goToCart() {
+            window.location.href = 'cart.html';
+        }
+
+        function goToCheckout() {
+            const cart = JSON.parse(localStorage.getItem('shoeStoreCart') || '[]');
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            window.location.href = 'checkout.html';
+        }
+
+        function goToDashboard() {
+            window.location.href = 'customer-dashboard.html';
+        }
+
+        function goToOrders() {
+            window.location.href = 'orders.html';
+        }
+
+        // Check if user is logged in and update UI
+        function checkLoginStatus() {
+            const token = localStorage.getItem('authToken');
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const userMenu = document.getElementById('userMenu');
+
+            if (token && userData.name) {
+                // User is logged in - show user menu
+                userMenu.innerHTML = `
+                    <div class="user-dropdown">
+                        <button class="auth-btn" onclick="toggleUserDropdown()">
+                            <i class="fas fa-user-circle"></i> ${userData.name}
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="dropdownMenu" class="dropdown-menu">
+                            <a href="customer-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="orders.html"><i class="fas fa-shopping-bag"></i> My Orders</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // User not logged in - show login button
+                userMenu.innerHTML = `
+                    <button class="auth-btn" onclick="goToLogin()">
+                        <i class="fas fa-user"></i> Login
+                    </button>
+                `;
+            }
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
+                window.location.reload();
+            }
+        }
+
+        // Contact form handler
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            event.target.reset();
+        }
+
+        // Newsletter form handler
+        function handleNewsletterSubmit(event) {
+            event.preventDefault();
+            alert('Thank you for subscribing to our newsletter!');
+            event.target.reset();
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.auth-btn')) {
+                const dropdowns = document.getElementsByClassName('dropdown-menu');
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            updateCartCount();
+        });
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('shoeStoreCart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+            }
+        }
+    </script>
+</body>
+</html>

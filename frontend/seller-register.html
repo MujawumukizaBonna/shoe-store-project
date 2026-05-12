@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Registration - New Shoes Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016, #4a7c59);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff8800, #ffaa00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .auth-header h1 {
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: #666;
+        }
+
+        .info-banner {
+            background: #fff3cd;
+            border-left: 4px solid #ffa500;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        .info-banner h3 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-banner ul {
+            margin-left: 1.5rem;
+            color: #856404;
+            font-size: 0.9rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2d5016;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff8800;
+            z-index: 1;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ffaa00;
+            box-shadow: 0 0 0 3px rgba(255, 170, 0, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            z-index: 2;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff8800, #ffaa00);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 136, 0, 0.4);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            color: #666;
+        }
+
+        .auth-links {
+            text-align: center;
+        }
+
+        .auth-links a {
+            color: #ff8800;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-home a {
+            color: #666;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-home a:hover {
+            color: #ff8800;
+        }
+
+        .error-message {
+            background: #ffe0e0;
+            border: 2px solid #ffb3b3;
+            color: #cc0000;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message {
+            background: #e0ffe0;
+            border: 2px solid #b3ffb3;
+            color: #006600;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fas fa-store"></i>
+            </div>
+            <h1>Become a Seller</h1>
+            <p>Start selling your shoes on New Shoes Store!</p>
+        </div>
+
+        <div class="info-banner">
+            <h3><i class="fas fa-info-circle"></i> Seller Benefits:</h3>
+            <ul>
+                <li>✅ List and manage your own products</li>
+                <li>✅ Track your sales and orders</li>
+                <li>✅ Set your own prices</li>
+                <li>✅ Reach thousands of customers</li>
+            </ul>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="sellerRegisterForm">
+            <h3 style="color: #2d5016; margin-bottom: 1rem;">Personal Information</h3>
+            
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name *</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="name" required placeholder="John Doe">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email Address *</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" required placeholder="seller@example.com">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone *</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" required placeholder="+250 788 123 456">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> City *</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="city" required placeholder="Kigali">
+                    </div>
+                </div>
+            </div>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 2px solid #e0e0e0;">
+            
+            <h3 style="color: #2d5016; margin-bottom: 1rem;">Business Information</h3>
+
+            <div class="form-group">
+                <label><i class="fas fa-store"></i> Business/Shop Name *</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-store"></i>
+                    <input type="text" id="businessName" required placeholder="My Shoe Store">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-align-left"></i> Business Description</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-align-left"></i>
+                    <textarea id="businessDescription" placeholder="Tell us about your shoe business..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-id-card"></i> Tax ID / Business License (Optional)</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="taxId" placeholder="Business registration number">
+                </div>
+            </div>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 2px solid #e0e0e0;">
+            
+            <h3 style="color: #2d5016; margin-bottom: 1rem;">Security</h3>
+
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password *</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" required placeholder="Min. 6 characters" minlength="6">
+                    <i class="fas fa-eye password-toggle" id="togglePassword" onclick="togglePassword('password', 'togglePassword')"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Confirm Password *</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" required placeholder="Re-enter password">
+                    <i class="fas fa-eye password-toggle" id="toggleConfirmPassword" onclick="togglePassword('confirmPassword', 'toggleConfirmPassword')"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn" id="registerBtn">
+                <i class="fas fa-store"></i> Register as Seller
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>or</span>
+        </div>
+
+        <div class="auth-links">
+            Already have an account? <a href="login.html">Login</a>
+        </div>
+
+        <div class="back-home">
+            <a href="index.html">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5500/api';
+
+        // Toggle password visibility
+        function togglePassword(fieldId, iconId) {
+            const input = document.getElementById(fieldId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Show error
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            successDiv.style.display = 'block';
+        }
+
+        // Handle registration
+        document.getElementById('sellerRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const businessName = document.getElementById('businessName').value.trim();
+            const businessDescription = document.getElementById('businessDescription').value.trim();
+            const taxId = document.getElementById('taxId').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showError('Passwords do not match!');
+                return;
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters long!');
+                return;
+            }
+
+            // Disable button
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating seller account...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password,
+                        phone,
+                        address: city,
+                        role: 'seller',
+                        businessInfo: {
+                            businessName,
+                            businessDescription,
+                            taxId
+                        }
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Save token and user data
+                    localStorage.setItem('authToken', result.token);
+                    localStorage.setItem('userData', JSON.stringify(result.user));
+
+                    showSuccess('Seller account created successfully! Redirecting to your dashboard...');
+
+                    // Redirect to seller dashboard
+                    setTimeout(() => {
+                        window.location.href = 'seller-dashboard.html';
+                    }, 1500);
+                } else {
+                    showError(result.message || 'Registration failed. Please try again.');
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '<i class="fas fa-store"></i> Register as Seller';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Unable to connect to server. Please make sure the backend is running.');
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<i class="fas fa-store"></i> Register as Seller';
+            }
+        });
+    </script>
+</body>
+</html>

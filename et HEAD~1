@@ -1,0 +1,23 @@
+[33mcommit 89eebc241a60b692938e63a375ea7707ac767a0c[m
+Author: Bonna <mujawumukizabonna9@gmail.com>
+Date:   Tue May 12 00:08:10 2026 +0200
+
+    fix environment variables
+
+[33mcommit a3c477410da002fe67f34342b5ddc5112b33bd96[m
+Author: Bonna <mujawumukizabonna9@gmail.com>
+Date:   Mon May 11 22:39:23 2026 +0200
+
+    add superbase dependancies
+
+[33mcommit 8e6b8540d7fb500c255cc12b3f4950985c3cb19e[m
+Author: Bonna <mujawumukizabonna9@gmail.com>
+Date:   Mon May 11 14:48:16 2026 +0200
+
+    switch to superbase backend
+
+[33mcommit debdb96b0a712492cd88b7d341559aacfd434795[m
+Author: Bonna <mujawumukizabonna9@gmail.com>
+Date:   Sat Mar 21 19:17:49 2026 +0200
+
+    Add .gitignore to exclude node_modules

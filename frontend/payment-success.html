@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - New Shoes Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016, #4a7c59);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .success-container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #4a7c59, #90EE90);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease 0.2s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        h1 {
+            color: #2d5016;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .order-number {
+            background: #f0f8f0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 2px dashed #4a7c59;
+        }
+
+        .order-number h3 {
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .order-id {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4a7c59;
+            font-family: 'Courier New', monospace;
+        }
+
+        .order-details {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #2d5016;
+            font-weight: 600;
+        }
+
+        .detail-value.total {
+            color: #4a7c59;
+            font-size: 1.3rem;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .info-box h4 {
+            color: #856404;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box ul {
+            margin-left: 1.5rem;
+            color: #856404;
+        }
+
+        .info-box li {
+            margin-bottom: 0.5rem;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a7c59, #90EE90);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 124, 89, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2d5016;
+            border: 2px solid #2d5016;
+        }
+
+        .btn-secondary:hover {
+            background: #2d5016;
+            color: white;
+        }
+
+        .social-share {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .social-share p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .social-btn.facebook { background: #3b5998; }
+        .social-btn.twitter { background: #1da1f2; }
+        .social-btn.whatsapp { background: #25d366; }
+        .social-btn.email { background: #ea4335; }
+
+        @media (max-width: 600px) {
+            .success-container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .order-id {
+                font-size: 1.3rem;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h1>🎉 Order Confirmed!</h1>
+        <p style="color: #666; font-size: 1.1rem;">Thank you for your purchase!</p>
+
+        <div class="order-number">
+            <h3>Your Order Number</h3>
+            <div class="order-id" id="orderIdDisplay">Loading...</div>
+        </div>
+
+        <div class="order-details" id="orderDetails">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <div class="info-box">
+            <h4><i class="fas fa-info-circle"></i> What Happens Next?</h4>
+            <ul>
+                <li>You'll receive an order confirmation email shortly</li>
+                <li>We'll contact you at your phone number for delivery confirmation</li>
+                <li>Your order will be processed within 24 hours</li>
+                <li>Expected delivery: 2-5 business days</li>
+            </ul>
+        </div>
+
+        <div class="action-buttons">
+            <a href="customer-dashboard.html" class="btn btn-primary">
+                <i class="fas fa-box"></i> Track Order
+            </a>
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-shopping-bag"></i> Continue Shopping
+            </a>
+        </div>
+
+        <div class="social-share">
+            <p>Share your happiness! 😊</p>
+            <div class="social-buttons">
+                <a href="#" class="social-btn facebook" onclick="shareOnFacebook()">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-btn twitter" onclick="shareOnTwitter()">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-btn whatsapp" onclick="shareOnWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="#" class="social-btn email" onclick="shareViaEmail()">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get order details from localStorage
+        const lastOrder = JSON.parse(localStorage.getItem('lastOrder') || '{}');
+
+        if (!lastOrder.orderId) {
+            window.location.href = 'index.html';
+        }
+
+        // Display order ID
+        const orderIdShort = lastOrder.orderId.slice(-8).toUpperCase();
+        document.getElementById('orderIdDisplay').textContent = '#' + orderIdShort;
+
+        // Display order details
+        const paymentMethodIcons = {
+            'cash': '<i class="fas fa-money-bill-wave"></i> Cash on Delivery',
+            'stripe': '<i class="fab fa-cc-stripe"></i> Credit/Debit Card',
+            'momo': '<i class="fas fa-mobile-alt"></i> Mobile Money'
+        };
+
+        document.getElementById('orderDetails').innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label">Order Date:</span>
+                <span class="detail-value">${new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Method:</span>
+                <span class="detail-value">${paymentMethodIcons[lastOrder.paymentMethod] || lastOrder.paymentMethod}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Total Amount:</span>
+                <span class="detail-value total">$${lastOrder.total.toFixed(2)}</span>
+            </div>
+        `;
+
+        // Confetti animation (optional)
+        setTimeout(() => {
+            createConfetti();
+        }, 500);
+
+        function createConfetti() {
+            const colors = ['#4a7c59', '#90EE90', '#2d5016', '#FFD700'];
+            const confettiCount = 50;
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.opacity = '1';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+                
+                document.body.appendChild(confetti);
+
+                const duration = Math.random() * 3 + 2;
+                const delay = Math.random() * 0.5;
+                
+                confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(100vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    delay: delay * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => confetti.remove();
+            }
+        }
+
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.origin);
+            const text = encodeURIComponent('I just ordered amazing shoes from New Shoes Store! 🎉👟');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
+            return false;
+        }
+
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.origin);
+            const text = encodeURIComponent('Just ordered from New Shoes Store! Great selection and easy checkout! 👟✨');
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+            return false;
+        }
+
+        function shareOnWhatsApp() {
+            const text = encodeURIComponent('I just ordered shoes from New Shoes Store! Check them out! ' + window.location.origin);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+            return false;
+        }
+
+        function shareViaEmail() {
+            const subject = encodeURIComponent('Check out New Shoes Store!');
+            const body = encodeURIComponent('I just had a great shopping experience at New Shoes Store. You should check it out!\n\n' + window.location.origin);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            return false;
+        }
+
+        // Clear last order after 5 minutes (optional)
+        setTimeout(() => {
+            localStorage.removeItem('lastOrder');
+        }, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
