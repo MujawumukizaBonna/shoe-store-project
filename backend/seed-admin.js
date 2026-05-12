@@ -1,65 +1,99 @@
-const mongoose = require('mongoose');
+const { createClient } = require('@supabase/supabase-js');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
-// User Schema (same as in server.js)
-const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, enum: ['customer', 'seller', 'admin'], default: 'customer' },
-    createdAt: { type: Date, default: Date.now }
-});
+// Supabase connection
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-const User = mongoose.model('User', userSchema);
-
-// Admin credentials - CHANGE THESE!
+// Admin credentials
 const ADMIN_EMAIL = 'admin@shoestore.com';
-const ADMIN_PASSWORD = 'YourNewPassword123!';  // ← CHANGE THIS!
+const ADMIN_PASSWORD = 'YourNewPassword123!';
 
 const SELLER_EMAIL = 'seller@shoestore.com';
-const SELLER_PASSWORD = 'SellerPassword123!';  // ← CHANGE THIS!
+const SELLER_PASSWORD = 'SellerPassword123!';
 
 async function seedAdmin() {
     try {
-        // Connect to MongoDB
-        await mongoose.connect(process.env.MONGODB_URI);
-        console.log('✅ Connected to MongoDB');
+        console.log('🔄 Connecting to Supabase...\n');
 
-        // Create Admin
-        const adminExists = await User.findOne({ email: ADMIN_EMAIL });
+        // =========================
+        // CREATE ADMIN
+        // =========================
+
+        const { data: adminExists, error: adminFindError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', ADMIN_EMAIL)
+            .single();
+
+        if (adminFindError && adminFindError.code !== 'PGRST116') {
+            throw adminFindError;
+        }
+
         if (!adminExists) {
             const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
-            await User.create({
-                name: 'Admin User',
-                email: ADMIN_EMAIL,
-                password: hashedPassword,
-                role: 'admin'
-            });
+
+            const { error: adminInsertError } = await supabase
+                .from('users')
+                .insert([
+                    {
+                        name: 'Admin User',
+                        email: ADMIN_EMAIL,
+                        password: hashedPassword,
+                        role: 'admin'
+                    }
+                ]);
+
+            if (adminInsertError) throw adminInsertError;
+
             console.log('✅ Admin account created:', ADMIN_EMAIL);
         } else {
-            console.log('⚠️  Admin already exists');
+            console.log('⚠️ Admin already exists');
         }
 
-        // Create Seller
-        const sellerExists = await User.findOne({ email: SELLER_EMAIL });
+        // =========================
+        // CREATE SELLER
+        // =========================
+
+        const { data: sellerExists, error: sellerFindError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', SELLER_EMAIL)
+            .single();
+
+        if (sellerFindError && sellerFindError.code !== 'PGRST116') {
+            throw sellerFindError;
+        }
+
         if (!sellerExists) {
             const hashedPassword = await bcrypt.hash(SELLER_PASSWORD, 10);
-            await User.create({
-                name: 'Seller User',
-                email: SELLER_EMAIL,
-                password: hashedPassword,
-                role: 'seller'
-            });
+
+            const { error: sellerInsertError } = await supabase
+                .from('users')
+                .insert([
+                    {
+                        name: 'Seller User',
+                        email: SELLER_EMAIL,
+                        password: hashedPassword,
+                        role: 'seller'
+                    }
+                ]);
+
+            if (sellerInsertError) throw sellerInsertError;
+
             console.log('✅ Seller account created:', SELLER_EMAIL);
         } else {
-            console.log('⚠️  Seller already exists');
+            console.log('⚠️ Seller already exists');
         }
 
-        console.log('✅ Seeding complete!');
+        console.log('\n✅ Seeding complete!');
         process.exit(0);
+
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('❌ Error:', error.message);
         process.exit(1);
     }
 }
